@@ -133,42 +133,24 @@ def download_video_clip(playback_url: str, date_str: str, start_time: str, end_t
 
         page.wait_for_timeout(1000)
 
-        # ── Step 7: Click the green download icon in the popup ───────────────
-        print("Clicking popup download icon...")
+        # ── Step 7: Click the exact green popup download button ───────────────
+        print("Clicking exact popup download button...")
         base_name = (
             f"video_{date_str.replace(' ', '_')}"
             f"_{start_time.replace(':', '')}"
             f"-{end_time.replace(':', '')}"
         )
 
+        download_button_selector = "button:has(img[src*='icon-download-video.png'])"
+        try:
+            page.wait_for_selector(download_button_selector, state="visible", timeout=30000)
+            print(f"  ✓ Found popup download button: {download_button_selector}")
+        except Exception:
+            page.screenshot(path="timeout_debug.png")
+            raise RuntimeError("Popup download button was not found. Check timeout_debug.png screenshot.")
+
         with page.expect_download(timeout=120000) as download_info:
-            clicked = page.evaluate("""
-                () => {
-                    const popup = Array.from(document.querySelectorAll('div, section, dialog'))
-                        .find(el => el.innerText.includes('History Playback')) || document.body;
-                    const buttons = Array.from(popup.querySelectorAll('button')).filter(btn => btn.offsetParent !== null);
-                    for (const btn of buttons) {
-                        const bg = window.getComputedStyle(btn).backgroundColor || '';
-                        if (bg.includes('34, 197') || bg.includes('22, 163') || bg.includes('21, 128') || bg.includes('16, 185') || bg.includes('5, 150')) {
-                            btn.click();
-                            return 'clicked green popup button: ' + btn.textContent.trim();
-                        }
-                    }
-                    for (const btn of buttons) {
-                        if (!btn.textContent.trim() && btn.querySelector('svg')) {
-                            btn.click();
-                            return 'clicked svg-only button fallback';
-                        }
-                    }
-                    const downloadBtn = buttons.find(btn => btn.textContent.trim().toLowerCase().includes('download'));
-                    if (downloadBtn) {
-                        downloadBtn.click();
-                        return 'clicked download text button fallback';
-                    }
-                    return 'no popup download button found';
-                }
-            """)
-            print(f"  Popup click result: {clicked}")
+            page.click(download_button_selector)
 
         download = download_info.value
         save_path = os.path.join(output_dir, f"{base_name}.mp4")
