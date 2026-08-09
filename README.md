@@ -27,7 +27,7 @@ I'll keep adding my projects and experiments here as I progress.
 |---|---|---|
 | Coming Soon | More ML projects will be added here | 🔄 Learning |
 
-## 🌱 Currently Learning
+## 🌱 Currently Learning!
 
 - Python for Machine Learning
 - NumPy & Pandas
