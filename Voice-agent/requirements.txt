@@ -1,0 +1,15 @@
+# LiveKit Core & Agents Framework
+livekit-agents
+livekit-api
+
+# LiveKit Plugins for Voice Pipeline
+livekit-plugins-openai
+livekit-plugins-deepgram
+livekit-plugins-cartesia
+livekit-plugins-silero
+livekit-plugins-noise-cancellation
+
+# Core Utilities & State Management
+python-dotenv
+pyyaml
+pydantic
