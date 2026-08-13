@@ -28,6 +28,8 @@ pip install playwright requests
 Then install Playwright browsers:
 ```powershell
 playwright install
+
+playwright install chromium
 ```
 
 ## Usage
